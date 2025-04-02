@@ -27,7 +27,7 @@ public class Wheel : MonoBehaviour
             }
             for (int index = 0; index < tiles.Count; index++)
             {
-                tiles[index].gameObject.transform.position = new Vector3(tiles[index].gameObject.transform.position.x, (index - current) * size);
+                tiles[index].gameObject.transform.position = new Vector3(transform.position.x, (index - current) * size + transform.position.y);
             }
         }
     }
@@ -64,7 +64,6 @@ public class Wheel : MonoBehaviour
         }
         foreach(GameObject go in objectHolder)
         {
-            go.transform.position = new Vector3(transform.position.x, 0);
             tiles.Add(go.GetComponent<Tile>());
         }
         tiles.Add(Instantiate(tiles[0]));
