@@ -38,6 +38,7 @@ public class SlotMachine : MonoBehaviour
             else if (state == 1)
             {
                 wheels[currentWheel].spinning = false;
+                wheels[currentWheel].fixing = true;
                 if(currentWheel != 2)
                 {
                     currentWheel++;

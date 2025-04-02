@@ -15,6 +15,7 @@ public class Wheel : MonoBehaviour
     [SerializeField] private GameObject[] tilePrefabs;
 
     public bool spinning = true;
+    public bool fixing = false;
     // Update is called once per frame
     void Update()
     {
@@ -25,10 +26,42 @@ public class Wheel : MonoBehaviour
             {
                 current -= (int)current;
             }
-            for (int index = 0; index < tiles.Count; index++)
+            Move();
+        }
+        else if (fixing)
+        {
+            int goal = Mathf.RoundToInt(current);
+            if (current < goal)
             {
-                tiles[index].gameObject.transform.position = new Vector3(transform.position.x, (index - current) * size + transform.position.y);
+                current += speed * Time.deltaTime * 0.1f;
+                if (current >= goal)
+                {
+                    current = goal;
+                    fixing = false;
+                }
             }
+            else if (current > goal)
+            {
+                current -= speed * Time.deltaTime * 0.1f;
+                if (current <= goal)
+                {
+                    current = goal;
+                    fixing = false;
+                }
+            }
+            else
+            {
+                fixing = false;
+            }
+            Move();
+        }
+    }
+
+    private void Move()
+    {
+        for (int index = 0; index < tiles.Count; index++)
+        {
+            tiles[index].gameObject.transform.position = new Vector3(transform.position.x, (index - current) * size + transform.position.y);
         }
     }
 
