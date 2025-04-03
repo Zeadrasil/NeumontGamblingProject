@@ -6,19 +6,17 @@ using UnityEngine;
 public class SlotMachine : MonoBehaviour
 {
     [SerializeField] private Wheel[] wheels;
-    private int state = 3;
-    private float spinTimeLeft = 0f;
+    private int state = -1;
+    private float spinTimeLeft = 0.5f;
     private int currentWheel = 0;
     public float currentSpin = 0;
     public float expectedReturnModifier = 1;
-    [SerializeField] private Canvas betCanvas;
-    [SerializeField] private TMP_InputField betInput;
-    [SerializeField] private Canvas jackpotDisplay;
-    [SerializeField] private TMP_Text jackpotText;
-    [SerializeField] private Canvas winDisplay;
-    [SerializeField] private TMP_Text winText;
-    [SerializeField] private Canvas loseDisplay;
+    [SerializeField] private TMP_Text betDisplay;
+    [SerializeField] private TMP_Text winningsDisplay;
     [SerializeField] private Canvas startMenu;
+    [SerializeField] private GameObject jackpotEffect;
+    [SerializeField] private Canvas HUD;
+    private float reward;
 
     // Update is called once per frame
     void Update()
@@ -47,51 +45,47 @@ public class SlotMachine : MonoBehaviour
                 else
                 {
                     state = 2;
+                    reward = CalculateRewards(new int[] { wheels[0].Result, wheels[1].Result, wheels[2].Result });
+                    if(reward == 1000)
+                    {
+                        Destroy(Instantiate(jackpotEffect), 5);
+                    }
                     spinTimeLeft = 1.5f;
                 }
             }
             else if(state == 2)
             {
-                float reward = CalculateRewards(new int[] { wheels[0].Result, wheels[1].Result, wheels[2].Result});
-                if(reward == 1000)
-                {
-                    jackpotDisplay.enabled = true;
-                    jackpotText.text = $"{(currentSpin == 19 ? "BONUS " : "")}JACKPOT! YOU WIN {int.Parse(betInput.text) * reward * expectedReturnModifier *(currentSpin == 19 ? 2 : 1)} TOKENS!";
-                }
-                else if(reward > 0)
-                {
-                    winDisplay.enabled = true;
-                    winText.text = $"Congratulations, you {(currentSpin == 19 ? "got the bonus and " : "")}win {int.Parse(betInput.text) * reward * expectedReturnModifier * (currentSpin == 19 ? 2 : 1)} tokens.";
-                }
-                else
-                {
-                    loseDisplay.enabled = true;
-                }
+                winningsDisplay.text = (reward * int.Parse(betDisplay.text) *
+                    (currentSpin == 19 ? 2 * expectedReturnModifier : expectedReturnModifier)).ToString();
                 state = 3;
+            }
+            else if(state == -1)
+            {
+                state = 3;
+                wheels[0].spinning = false;
+                wheels[1].spinning = false;
+                wheels[2].spinning = false;
+                wheels[0].fixing = true;
+                wheels[1].fixing = true;
+                wheels[2].fixing = true;
             }
         }
     }
 
-    public void CloseResult()
-    {
-        winDisplay.enabled = false;
-        loseDisplay.enabled = false;
-        jackpotDisplay.enabled = false;
-        betCanvas.enabled = true;
-    }
-
     public void InitiateSpin()
     {
-        wheels[0].spinning = true;
-        wheels[1].spinning = true;
-        wheels[2].spinning = true;
-        betCanvas.enabled = false;
-        currentSpin++;
-        if(currentSpin == 20)
+        if (state == 3)
         {
-            currentSpin = 0;
+            wheels[0].spinning = true;
+            wheels[1].spinning = true;
+            wheels[2].spinning = true;
+            currentSpin++;
+            if (currentSpin == 20)
+            {
+                currentSpin = 0;
+            }
+            state = 0;
         }
-        state = 0;
     }
 
     public float CalculateRewards(int[] results)
@@ -244,6 +238,31 @@ public class SlotMachine : MonoBehaviour
     public void Initialize(float expectedReturn)
     {
         expectedReturnModifier = expectedReturn;
+        betDisplay.text = (expectedReturnModifier == 0.5f || expectedReturnModifier == 1.5f) ? "10" : "5";
+        winningsDisplay.text = string.Empty;
         startMenu.enabled = false;
+        HUD.enabled = true;
+    }
+
+    public void IncreaseBet()
+    {
+        if (state == 3)
+        {
+            betDisplay.text = (int.Parse(betDisplay.text) + ((expectedReturnModifier == 0.5f ||
+                expectedReturnModifier == 1.5f) ? 10 : 5)).ToString();
+        }
+    }
+    public void DecreaseBet()
+    {
+        if (state == 3)
+        {
+            int val = (expectedReturnModifier == 0.5f || expectedReturnModifier == 1.5f) ? 10 : 5;
+            int newBet = int.Parse(betDisplay.text) - val;
+            if (newBet < val)
+            {
+                newBet = val;
+            }
+            betDisplay.text = newBet.ToString();
+        }
     }
 }
