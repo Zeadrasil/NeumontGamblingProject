@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      fieryllama_0: -7442414665410507228
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

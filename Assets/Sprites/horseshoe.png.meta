@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      horseshoe_0: 5724390328658649723
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      rainbowllama_0: 9116744981959532749
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

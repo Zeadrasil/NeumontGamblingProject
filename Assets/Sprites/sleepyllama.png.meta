@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      sleepyllama_0: 4415849160025562777
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

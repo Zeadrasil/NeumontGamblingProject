@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      jackpotllama_0: 8679436260744827963
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
