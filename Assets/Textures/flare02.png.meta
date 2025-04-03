@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f12852287dd2f7343bfff9f044856aa0
+guid: 6a66d53cadd9c5d47b3778a8f728cace
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3170384797411763935
-    second: neumont jackpot - cover_0
+      213: 8906151468358011241
+    second: flare02_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: neumont jackpot - cover_0
+      name: flare02_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1536
+        x: 103
+        y: 36
+        width: 345
+        height: 407
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 12919fcf2d78004d0800000000000000
-      internalID: -3170384797411763935
+      spriteID: 9698d4bd291099b70800000000000000
+      internalID: 8906151468358011241
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      neumont jackpot - cover_0: -3170384797411763935
+      flare02_0: 8906151468358011241
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
