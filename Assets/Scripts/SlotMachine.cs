@@ -332,31 +332,36 @@ public class SlotMachine : MonoBehaviour
 
 	public void OnApplyCredits(int credit)
 	{
-		// check if we are starting the game
-		if (credits == 0)
+		if (state == 4)
 		{
-			onStartGame.RaiseEvent();
+			// check if we are starting the game
+			if (credits == 0)
+			{
+				onStartGame.RaiseEvent();
+			}
+
+			onAudioEvent.OnPlayEvent(creditsAudioClip);
+
+			credits += credit;
+			//Cap caused issues when pressed after receiving a reward, so removed to reduce risk of accidental clearing of winnings
+			//if (credits > 100) credits = 100;
+			creditsDisplay.text = credits.ToString("000");
 		}
-
-		onAudioEvent.OnPlayEvent(creditsAudioClip);
-
-		credits += credit;
-		//Cap caused issues when pressed after receiving a reward, so removed to reduce risk of accidental clearing of winnings
-		//if (credits > 100) credits = 100;
-		creditsDisplay.text = credits.ToString("000");
 	}
 
 	public void OnCashOut()
 	{
-		onStopGame.RaiseEvent();
-		if (credits > 0) onAudioEvent.OnPlayEvent(cashoutAudioClip);
+		if (state == 4)
+		{
+			onStopGame.RaiseEvent();
+			if (credits > 0) onAudioEvent.OnPlayEvent(cashoutAudioClip);
 
-		credits = 0;
-		bet = 0;
-		onUpdateBet.RaiseEvent(bet);
-		creditsDisplay.text = credits.ToString("000");
-		betDisplay.text = bet.ToString("000");
-
+			credits = 0;
+			bet = 0;
+			onUpdateBet.RaiseEvent(bet);
+			creditsDisplay.text = credits.ToString("000");
+			betDisplay.text = bet.ToString("000");
+		}
 	}
 
 	#endregion // Buttons
