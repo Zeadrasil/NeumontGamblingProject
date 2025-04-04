@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles: []
-  size: 1.45
+  size: 1.3
   speed: 6.5
   current: 1
   tilePrefabs:
@@ -1031,8 +1031,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.625, y: 1.07, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.4575, z: 0.375}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.7, y: 0.4, z: 0.375}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2035,7 +2035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles: []
-  size: 1.45
+  size: 1.3
   speed: 7
   current: 1
   tilePrefabs:
@@ -2126,8 +2126,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.07, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.4575, z: 0.375}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.6, y: 0.4, z: 0.375}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3131,7 +3131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles: []
-  size: 1.45
+  size: 1.3
   speed: 7.5
   current: 1
   tilePrefabs:
@@ -3222,8 +3222,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.625, y: 1.07, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.4575, z: 0.375}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.7, y: 0.4, z: 0.375}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

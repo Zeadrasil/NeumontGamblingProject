@@ -30,7 +30,7 @@ public class Wheel : MonoBehaviour
         }
         else if (fixing)
         {
-            int goal = Mathf.RoundToInt(current);
+            int goal = Mathf.RoundToInt(Mathf.Clamp(current, 1, tiles.Count - 2));
             if (current < goal)
             {
                 current += speed * Time.deltaTime * 0.1f;
