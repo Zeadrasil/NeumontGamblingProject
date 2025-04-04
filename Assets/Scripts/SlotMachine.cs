@@ -46,7 +46,7 @@ public class SlotMachine : MonoBehaviour
                 {
                     state = 2;
                     reward = CalculateRewards(new int[] { wheels[0].Result, wheels[1].Result, wheels[2].Result });
-                    if(reward * expectedReturnModifier >= 40)
+                    if(reward * (currentSpin == 19 ? 2 * expectedReturnModifier : expectedReturnModifier) >= 40)
                     {
                         Destroy(Instantiate(jackpotEffect), 5);
                     }
