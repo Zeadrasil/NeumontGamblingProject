@@ -8,6 +8,7 @@ public class JackpotEffect : MonoBehaviour
 	[SerializeField] private float maxForce = 1;
 	[SerializeField] private float maxAngle = 1;    // Random angle for the force direction
 	[SerializeField] private float maxDistance = 1; // Maximum distance from the original position
+	[SerializeField] private float lifetime = 1;    // Lifetime of the effect prefab
 	[SerializeField] private float rate = 1;        // Time between effect spawns
 	[SerializeField] private float duration = 5;    // Total duration of the entire effect sequence
 
@@ -70,7 +71,7 @@ public class JackpotEffect : MonoBehaviour
 
 		// Destroy each individual effect instance after a certain duration
 		// This is different from the total sequence duration
-		Destroy(effect, 2f); // You might want to make this a separate parameter
+		Destroy(effect, lifetime); // You might want to make this a separate parameter
 	}
 
 	// Optional: Add method to stop the effect early if needed

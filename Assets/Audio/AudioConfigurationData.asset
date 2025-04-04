@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e9a72f571dfbe94baf40f00cc765f43, type: 3}
+  m_Name: AudioConfigurationData
+  m_EditorClassIdentifier: 
+  type: 0
+  priority: 128
+  audioMixerGroup: {fileID: 2579228888239841481, guid: 6eafc6057da2b964eb826127fc09cd7b, type: 2}
+  volume: 1
+  volumeRandom: 0
+  pitch: 0
+  pitchRandom: 0
+  spatialBlend: 0
+  rolloffMode: 0
+  minDistance: 0.1
+  maxDistance: 50

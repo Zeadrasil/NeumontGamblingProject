@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 207453510766535348}
   - component: {fileID: 2318321971951227562}
   - component: {fileID: 7451193648752511871}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 295579833856338081}
   - component: {fileID: 7391125552494154071}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 7156325141964506823}
   - component: {fileID: 8337630681746417488}
   - component: {fileID: 5524565579852226483}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -286,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 271862766136202083}
   - component: {fileID: 5882304617941693464}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}

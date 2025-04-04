@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -53,15 +54,43 @@ public readonly struct Empty { }
 /// Uses the Empty struct as a placeholder type to maintain the generic structure.
 /// Create instances of this class when you need events that don't pass any data.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/EventChannel")]
+[CreateAssetMenu(menuName = "Events/Event Channel")]
 public class EventChannel : EventChannel<Empty>
 {
-	/// <summary>
-	/// Raises the event without requiring an Empty parameter.
-	/// A convenience method that creates an Empty instance internally.
-	/// </summary>
+	// Dictionary to keep track of the wrapped actions
+	private Dictionary<UnityAction, UnityAction<Empty>> wrappedActions = new Dictionary<UnityAction, UnityAction<Empty>>();
+
 	public void RaiseEvent()
 	{
 		base.RaiseEvent(new Empty());
+	}
+
+	// Subscribe with a parameterless action
+	public void Subscribe(UnityAction listener)
+	{
+		if (listener != null)
+		{
+			// Create a wrapper that takes Empty but calls the parameterless action
+			UnityAction<Empty> wrapper = (_) => listener();
+
+			// Store the mapping
+			wrappedActions[listener] = wrapper;
+
+			// Subscribe the wrapper
+			base.Subscribe(wrapper);
+		}
+	}
+
+	// Unsubscribe the parameterless action
+	public void Unsubscribe(UnityAction listener)
+	{
+		if (listener != null && wrappedActions.TryGetValue(listener, out var wrapper))
+		{
+			// Unsubscribe the wrapper
+			base.Unsubscribe(wrapper);
+
+			// Remove from dictionary
+			wrappedActions.Remove(listener);
+		}
 	}
 }

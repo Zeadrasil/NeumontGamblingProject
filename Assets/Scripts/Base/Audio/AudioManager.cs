@@ -14,7 +14,7 @@ public class AudioManager : Singleton<AudioManager>
 	[SerializeField] FloatData musicVolume;
 
 	// Event triggered when audio settings change.
-	[SerializeField] Event onAudioChange;
+	[SerializeField] EventChannel onAudioChange;
 	[SerializeField] AudioCueEvent onPlayAudioCueEvent;
 	[SerializeField] AudioClipEvent onPlayAudioClipEvent;
 	[SerializeField] AudioClipEvent onPlay3DAudioClipEvent;
@@ -32,7 +32,7 @@ public class AudioManager : Singleton<AudioManager>
 	void Start()
 	{
 		// Subscribes to the event to update audio settings when triggered.
-		//onAudioChange?.Subscribe(OnAudioChange);
+		onAudioChange?.Subscribe(OnAudioChange);
 
 		onPlayAudioCueEvent.OnAudioCuePlay += OnPlayAudioCue;
 		//onPlayAudioClipEvent?.Subscribe(OnPlayAudioClip);
