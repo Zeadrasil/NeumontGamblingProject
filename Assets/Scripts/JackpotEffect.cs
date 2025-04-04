@@ -16,10 +16,16 @@ public class JackpotEffect : MonoBehaviour
 
 	void Start()
 	{
-		jackpotCoroutine = StartCoroutine(StartJackpotEffect(transform.position));
+		//jackpotCoroutine = StartCoroutine(StartJackpotEffect(transform.position));
 	}
 
 	// You can also call this method from other scripts to manually start the effect
+	public void BeginJackpotEffect()
+	{
+		jackpotCoroutine = StartCoroutine(StartJackpotEffect(transform.position));
+	}
+
+
 	public void BeginJackpotEffect(Vector3 position)
 	{
 		// Stop any existing coroutine to prevent multiple instances

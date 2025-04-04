@@ -7,15 +7,15 @@ public class AudioClipEvent : ScriptableObjectBase
 {
 	public AudioClipPlayAction OnAudioClipPlay;
 
-	public bool OnPlayEvent(AudioClip audioClip, Vector3 positionInSpace = default)
+	public bool OnPlayEvent(AudioClip audioClip)
 	{
 		if (OnAudioClipPlay != null)
 		{
-			OnAudioClipPlay.Invoke(audioClip, positionInSpace);
+			OnAudioClipPlay.Invoke(audioClip);
 		}
 
 		return true;
 	}
 
-	public delegate bool AudioClipPlayAction(AudioClip audioClip, Vector3 positionInSpace);
+	public delegate bool AudioClipPlayAction(AudioClip audioClip);
 }
