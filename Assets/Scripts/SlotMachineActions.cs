@@ -50,19 +50,19 @@ public class SlotMachineActions : MonoBehaviour
 		if (musicAudioClip == null && Time.time > nextPlayMusicTime)
 		{
 			musicAudioClip = musicAudioClips[Random.Range(0, musicAudioClips.Length)];
-			onAudioEvent.OnPlayEvent(musicAudioClip);
-			playMusicTime = Time.time + musicAudioClip.length;
+			playMusicTime = Time.time + musicAudioClip.length + 1;
+			StartCoroutine(PlaySoundClipDelay(1));
 		}
 
 		if (musicAudioClip != null && Time.time > playMusicTime)
 		{
 			if (playingGame)
 			{
-				nextPlayMusicTime = Time.time + musicAudioClip.length + Random.Range(minMusicTime, minMusicTime * 1.5f);
+				nextPlayMusicTime = Time.time + Random.Range(minMusicTime, minMusicTime * 1.5f);
 			}
 			else
 			{
-				nextPlayMusicTime = Time.time + musicAudioClip.length + Random.Range(minAttractMusicTime, minAttractMusicTime * 1.5f);
+				nextPlayMusicTime = Time.time + Random.Range(minAttractMusicTime, minAttractMusicTime * 1.5f);
 			}
 
 			musicAudioClip = null;
@@ -92,8 +92,8 @@ public class SlotMachineActions : MonoBehaviour
 		if (musicAudioClip == null)
 		{
 			musicAudioClip = musicAudioClips[Random.Range(0, musicAudioClips.Length)];
-			onAudioEvent.OnPlayEvent(musicAudioClip);
-			playMusicTime = Time.time + musicAudioClip.length;
+			playMusicTime = Time.time + musicAudioClip.length + 1;
+			StartCoroutine(PlaySoundClipDelay(1));
 		}
 	}
 
@@ -123,15 +123,22 @@ public class SlotMachineActions : MonoBehaviour
 		currentBet = newBet;
 	}
 
+	IEnumerator PlaySoundClipDelay(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+
+		onAudioEvent.OnPlayEvent(musicAudioClip);		
+	}
+
 	IEnumerator WinSequence(int result)
 	{
 		float waitTime = 1;
-		int relativeResult = result / currentBet;
-		if (relativeResult >= 1 && relativeResult < 10)
+		float relativeResult = result / (float)currentBet;
+		if (relativeResult >= 0.2f && relativeResult < 2.0f)
 		{
 			onAudioEvent.OnPlayEvent(winLowAudioClip);
 		}
-		if (relativeResult >= 10 && relativeResult < 30)
+		if (relativeResult >= 2.0f && relativeResult < 5.0f)
 		{
 			winText.text = "BIG WIN!";
 			winAnimator.SetTrigger("Start");
@@ -145,7 +152,7 @@ public class SlotMachineActions : MonoBehaviour
 			onAudioEvent.OnPlayEvent(winMediumAudioClip);
 			waitTime += 2;
 		}
-		if (relativeResult >= 30)
+		if (relativeResult >= 5.0f)
 		{
 			winText.text = "MASSIVE WIN!";
 			winAnimator.SetTrigger("Start");
@@ -163,7 +170,7 @@ public class SlotMachineActions : MonoBehaviour
 		
 		yield return new WaitForSeconds(waitTime);
 
-		if (relativeResult >= 10)	winAnimator.SetTrigger("Done");
+		if (relativeResult >= 2.0f)	winAnimator.SetTrigger("Done");
 		onSpinResultDone.RaiseEvent();
 	}
 

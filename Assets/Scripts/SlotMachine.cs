@@ -107,15 +107,15 @@ public class SlotMachine : MonoBehaviour
 			}
 			else if (state == -2)
 			{
-                // initialize wheels
-                state = 4;
-                wheels[0].spinning = false;
-                wheels[1].spinning = false;
-                wheels[2].spinning = false;
-                wheels[0].fixing = true;
-                wheels[1].fixing = true;
-                wheels[2].fixing = true;
-            }
+				// initialize wheels
+				state = 4;
+				wheels[0].spinning = false;
+				wheels[1].spinning = false;
+				wheels[2].spinning = false;
+				wheels[0].fixing = true;
+				wheels[1].fixing = true;
+				wheels[2].fixing = true;
+			}
 		}
 	}
 
