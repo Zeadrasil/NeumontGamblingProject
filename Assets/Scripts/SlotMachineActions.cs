@@ -1,12 +1,17 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class SlotMachineActions : MonoBehaviour
 {
 	[SerializeField] private Animator[] flareAnimators;
+	[SerializeField] private Animator winAnimator;
+	[SerializeField] TMP_Text winText;
 	[SerializeField] private JackpotEffect jackpotEffect;
 
 	[Header("Events")]
+	[SerializeField] private EventChannel onStartGame;
+	[SerializeField] private EventChannel onStopGame;
 	[SerializeField] private EventChannel onSpinStart;
 	[SerializeField] private IntEventChannel onSpinResult;
 	[SerializeField] private EventChannel onSpinResultDone;
@@ -17,27 +22,47 @@ public class SlotMachineActions : MonoBehaviour
 	[SerializeField] private AudioClip winMediumAudioClip;
 	[SerializeField] private AudioClip winHighAudioClip;
 	[SerializeField] private AudioClip[] musicAudioClips;
+	[SerializeField] private float minAttractMusicTime = 10;
 	[SerializeField] private float minMusicTime = 10;
 
 	Coroutine flaresCoroutine;
-	float playMusicTime;
+	float playMusicTime = 0;
+	float nextPlayMusicTime = 0;
+	AudioClip musicAudioClip = null;
+	bool playingGame = false;
 
 	void Start()
 	{
+		onStartGame.Subscribe(OnStartGame);
+		onStopGame.Subscribe(OnStopGame);
 		onSpinStart.Subscribe(OnSpinStart);
 		onSpinResult.Subscribe(OnSpinResults);
 
-		playMusicTime = Time.time + Random.Range(minMusicTime, minMusicTime * 1.5f);
+		nextPlayMusicTime = Time.time + Random.Range(minAttractMusicTime, minAttractMusicTime * 1.5f);
 	}
 		
 	void Update()
 	{
 		// play music
-		if (Time.time > playMusicTime)
+		if (musicAudioClip == null && Time.time > nextPlayMusicTime)
 		{
-			AudioClip musicAudioClip = musicAudioClips[Random.Range(0, musicAudioClips.Length)];
+			musicAudioClip = musicAudioClips[Random.Range(0, musicAudioClips.Length)];
 			onAudioEvent.OnPlayEvent(musicAudioClip);
-			playMusicTime = Time.time + musicAudioClip.length + Random.Range(minMusicTime, minMusicTime * 1.5f);
+			playMusicTime = Time.time + musicAudioClip.length;
+		}
+
+		if (musicAudioClip != null && Time.time > playMusicTime)
+		{
+			if (playingGame)
+			{
+				nextPlayMusicTime = Time.time + musicAudioClip.length + Random.Range(minMusicTime, minMusicTime * 1.5f);
+			}
+			else
+			{
+				nextPlayMusicTime = Time.time + musicAudioClip.length + Random.Range(minAttractMusicTime, minAttractMusicTime * 1.5f);
+			}
+
+			musicAudioClip = null;
 		}
 
 		// play random light flares
@@ -58,6 +83,22 @@ public class SlotMachineActions : MonoBehaviour
 		}
 	}
 
+	void OnStartGame()
+	{
+		playingGame = true;
+		if (musicAudioClip == null)
+		{
+			musicAudioClip = musicAudioClips[Random.Range(0, musicAudioClips.Length)];
+			onAudioEvent.OnPlayEvent(musicAudioClip);
+			playMusicTime = Time.time + musicAudioClip.length;
+		}
+	}
+
+	void OnStopGame()
+	{
+		playingGame = false;
+	}
+
 	void OnSpinStart()
 	{
 		if (flaresCoroutine != null)
@@ -75,13 +116,16 @@ public class SlotMachineActions : MonoBehaviour
 
 	IEnumerator WinSequence(int result)
 	{
-		float waitTime = 2;
-		if (result > 0 && result < 10)
+		float waitTime = 1;
+		if (result >= 1 && result < 10)
 		{
 			onAudioEvent.OnPlayEvent(winLowAudioClip);
 		}
-		if (result >= 10)
+		if (result >= 10 && result < 30)
 		{
+			winText.text = "BIG WIN!";
+			winAnimator.SetTrigger("Start");
+
 			if (flaresCoroutine != null)
 			{
 				StopCoroutine(flaresCoroutine);
@@ -93,19 +137,23 @@ public class SlotMachineActions : MonoBehaviour
 		}
 		if (result >= 30)
 		{
+			winText.text = "MASSIVE WIN!";
+			winAnimator.SetTrigger("Start");
+
 			if (flaresCoroutine != null)
 			{
 				StopCoroutine(flaresCoroutine);
 				flaresCoroutine = null;
 			}
 			flaresCoroutine = StartCoroutine(WinFlares(0.1f, 5));
-			jackpotEffect.BeginJackpotEffect();
 			onAudioEvent.OnPlayEvent(winHighAudioClip);
-			waitTime += 4;
+			jackpotEffect.BeginJackpotEffect();
+			waitTime += 3;
 		}
-
+		
 		yield return new WaitForSeconds(waitTime);
 
+		if (result >= 10)	winAnimator.SetTrigger("Done");
 		onSpinResultDone.RaiseEvent();
 	}
 

@@ -15,6 +15,8 @@ public class SlotMachine : MonoBehaviour
 	[SerializeField] private TMP_Text creditsDisplay;
 
 	[Header("Events")]
+	[SerializeField] private EventChannel onStartGame;
+	[SerializeField] private EventChannel onStopGame;
 	[SerializeField] private EventChannel onSpinStart;
 	[SerializeField] private IntEventChannel onSpinResult;
 	[SerializeField] private EventChannel onSpinResultDone;
@@ -99,7 +101,9 @@ public class SlotMachine : MonoBehaviour
 			{
 				credits += winnings;
 				winnings = 0;
+				if (bet > credits) bet = (credits / 5) * 5;
 				creditsDisplay.text = credits.ToString("000");
+				betDisplay.text = bet.ToString("000");
 				winningsDisplay.text = winnings.ToString("000");
 				state = 4;
 			}
@@ -110,6 +114,7 @@ public class SlotMachine : MonoBehaviour
 	{
 		state = 3;
 	}
+
 	#region Rewards
 
 	public float CalculateRewards(int[] results)
@@ -318,6 +323,12 @@ public class SlotMachine : MonoBehaviour
 
 	public void OnApplyCredits(int credit)
 	{
+		// check if we are starting the game
+		if (credits == 0)
+		{
+			onStartGame.RaiseEvent();
+		}
+
 		onAudioEvent.OnPlayEvent(creditsAudioClip);
 
 		credits += credit;
@@ -327,6 +338,7 @@ public class SlotMachine : MonoBehaviour
 
 	public void OnCashOut()
 	{
+		onStopGame.RaiseEvent();
 		if (credits > 0) onAudioEvent.OnPlayEvent(cashoutAudioClip);
 
 		credits = 0;
