@@ -7,16 +7,17 @@ using UnityEngine;
 public class SlotMachine : MonoBehaviour
 {
 	[SerializeField] private Wheel[] wheels;
-	private int state = -1;
-	private float spinTimeLeft = 0.5f;
-	private int currentWheel = 0;
-	public float currentSpin = 0;
-	public float expectedReturnModifier = 1;
 
+	[Header("UI")]
 	[SerializeField] private GameObject startMenu;
 	[SerializeField] private TMP_Text betDisplay;
 	[SerializeField] private TMP_Text winningsDisplay;
 	[SerializeField] private TMP_Text creditsDisplay;
+
+	[Header("Events")]
+	[SerializeField] private EventChannel onSpinStart;
+	[SerializeField] private IntEventChannel onSpinResult;
+	[SerializeField] private EventChannel onSpinResultDone;
 
 	[Header("Audio")]
 	[SerializeField] private AudioClipEvent onAudioEvent;
@@ -26,18 +27,31 @@ public class SlotMachine : MonoBehaviour
 	[SerializeField] private AudioClip betdownAudioClip;
 	[SerializeField] private AudioClip startSpinAudioClip;
 	[SerializeField] private AudioClip stopSpinAudioClip;
+		
+	private int state = -1;
+	private float spinTimeLeft = 0.5f;
+	private int currentWheel = 0;
+	public float currentSpin = 0;
+	public float expectedReturnModifier = 1;
 
-	[SerializeField] private GameObject jackpotEffect;
-	
 	private float reward;
-
 	private int credits = 0;
 	private int bet = 0;
 	private int winnings = 0;
 
 	private void Start()
 	{
+		onSpinResultDone.Subscribe(OnSpinResultDone);
 		OnSetReturn(expectedReturnModifier);
+
+		// initialize wheels
+		state = 4;
+		wheels[0].spinning = false;
+		wheels[1].spinning = false;
+		wheels[2].spinning = false;
+		wheels[0].fixing = true;
+		wheels[1].fixing = true;
+		wheels[2].fixing = true;
 	}
 
 	void Update()
@@ -47,8 +61,6 @@ public class SlotMachine : MonoBehaviour
 		{
 			if (state == 0)
 			{
-				//onAudioEvent.OnPlayEvent(stopSpinAudioClip);
-				
 				state = 1;
 				currentWheel = 0;
 				spinTimeLeft = Random.value * 1 + 0.5f;
@@ -68,10 +80,6 @@ public class SlotMachine : MonoBehaviour
 				{
 					state = 2;
 					reward = CalculateRewards(new int[] { wheels[0].Result, wheels[1].Result, wheels[2].Result });
-					if(reward * (currentSpin == 19 ? 2 * expectedReturnModifier : expectedReturnModifier) >= 40)
-					{
-						//Destroy(Instantiate(jackpotEffect), 5);
-					}
 					spinTimeLeft = 0.5f;
 				}
 			}
@@ -81,8 +89,11 @@ public class SlotMachine : MonoBehaviour
 				winningsDisplay.text = winnings.ToString("000");
 				//winningsDisplay.text = (reward * int.Parse(betDisplay.text) *
 				//	(currentSpin == 19 ? 2 * expectedReturnModifier : expectedReturnModifier)).ToString();
-				state = 3;
-				spinTimeLeft = 2.0f;
+				//state = 3;
+				//spinTimeLeft = 2.0f;
+
+				onSpinResult.RaiseEvent(winnings);
+				state = -1; // wait in this state until spin result done
 			}
 			else if (state == 3)
 			{
@@ -90,24 +101,15 @@ public class SlotMachine : MonoBehaviour
 				winnings = 0;
 				creditsDisplay.text = credits.ToString("000");
 				winningsDisplay.text = winnings.ToString("000");
-				//creditsDisplay.text = (int.Parse(creditsDisplay.text) + int.Parse(winningsDisplay.text)).ToString();
-				//winningsDisplay.text = "000";
 				state = 4;
-			}
-			else if (state == -1)
-			{
-				state = 4;
-				wheels[0].spinning = false;
-				wheels[1].spinning = false;
-				wheels[2].spinning = false;
-				wheels[0].fixing = true;
-				wheels[1].fixing = true;
-				wheels[2].fixing = true;
 			}
 		}
 	}
 
-
+	void OnSpinResultDone()
+	{
+		state = 3;
+	}
 	#region Rewards
 
 	public float CalculateRewards(int[] results)
@@ -280,6 +282,7 @@ public class SlotMachine : MonoBehaviour
 
 			credits -= bet;
 			creditsDisplay.text = credits.ToString("000");
+			onSpinStart.RaiseEvent();
 		}
 	}
 
@@ -291,7 +294,6 @@ public class SlotMachine : MonoBehaviour
 			if (bet + addBet > credits) return;
 
 			bet += addBet;
-			//credits -= addBet;
 
 			betDisplay.text = bet.ToString("000");
 			creditsDisplay.text = credits.ToString("000");
@@ -307,7 +309,6 @@ public class SlotMachine : MonoBehaviour
 			if (bet <= 0) return;
 
 			bet -= subtractBet;
-			//credits += subtractBet;
 
 			betDisplay.text = bet.ToString("000");
 			creditsDisplay.text = credits.ToString("000");
@@ -347,8 +348,6 @@ public class SlotMachine : MonoBehaviour
 	public void OnSetReturn(float expectedReturn)
 	{
 		expectedReturnModifier = expectedReturn;
-		//betDisplay.text = (expectedReturnModifier == 0.5f || expectedReturnModifier == 1.5f) ? "10" : "5";
-		//winningsDisplay.text = "00";
 		startMenu.SetActive(false);
 	}
 

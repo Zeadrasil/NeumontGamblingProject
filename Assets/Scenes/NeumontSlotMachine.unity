@@ -20475,6 +20475,20 @@ MonoBehaviour:
   - {fileID: 1975623364}
   - {fileID: 1608956151}
   - {fileID: 1639769660}
+  jackpotEffect: {fileID: 0}
+  onSpinStart: {fileID: 11400000, guid: 14ffd473872efb04589a52fd295700e7, type: 2}
+  onSpinResult: {fileID: 11400000, guid: 7f9008cae615f424ba863f57150a2940, type: 2}
+  onSpinResultDone: {fileID: 11400000, guid: a1c3f4c33482e6145a1c9eec7e281ebe, type: 2}
+  onAudioEvent: {fileID: 11400000, guid: 56f3b49f7b57fc44cbdf7aa7b470a41a, type: 2}
+  winLowAudioClip: {fileID: 8300000, guid: 62b1a535c79c7df49936aa9d9cac74fd, type: 3}
+  winMediumAudioClip: {fileID: 8300000, guid: 55d742d16614d364bb6ddef91200ce9e, type: 3}
+  winHighAudioClip: {fileID: 8300000, guid: 237cb8c0a6fd1a145ba1dae2859b27f3, type: 3}
+  musicAudioClips:
+  - {fileID: 8300000, guid: fc396a2571dbdba45b981cb254f27624, type: 3}
+  - {fileID: 8300000, guid: 8eb64694e956e334eab8c2a90bc65a37, type: 3}
+  - {fileID: 8300000, guid: ac7c2e053dcedd341a708c7603bd5437, type: 3}
+  - {fileID: 8300000, guid: 9b13dff5b6b7e764abb6a28a2307845f, type: 3}
+  minMusicTime: 10
 --- !u!4 &405954629
 Transform:
   m_ObjectHideFlags: 0
@@ -24231,12 +24245,13 @@ MonoBehaviour:
   - {fileID: 356921256}
   - {fileID: 580349195}
   - {fileID: 1081851274}
-  currentSpin: 0
-  expectedReturnModifier: 1
   startMenu: {fileID: 909947060}
   betDisplay: {fileID: 394197066}
   winningsDisplay: {fileID: 686781623}
   creditsDisplay: {fileID: 21309197}
+  onSpinStart: {fileID: 11400000, guid: 14ffd473872efb04589a52fd295700e7, type: 2}
+  onSpinResult: {fileID: 11400000, guid: 7f9008cae615f424ba863f57150a2940, type: 2}
+  onSpinResultDone: {fileID: 11400000, guid: a1c3f4c33482e6145a1c9eec7e281ebe, type: 2}
   onAudioEvent: {fileID: 11400000, guid: 56f3b49f7b57fc44cbdf7aa7b470a41a, type: 2}
   cashoutAudioClip: {fileID: 8300000, guid: a5a61aaec721c1c438247b8a4e7635d5, type: 3}
   creditsAudioClip: {fileID: 8300000, guid: 41479d42853e5574d9b3bbc36412815d, type: 3}
@@ -24244,7 +24259,8 @@ MonoBehaviour:
   betdownAudioClip: {fileID: 8300000, guid: 1a5da94734ab08a47aa0f87b61b51b3e, type: 3}
   startSpinAudioClip: {fileID: 8300000, guid: 02d5774cbb256a84087a9329ec42064c, type: 3}
   stopSpinAudioClip: {fileID: 8300000, guid: 7b13c22217139db418cb38a34543525d, type: 3}
-  jackpotEffect: {fileID: 7326306232110503685, guid: 90051770874d23c4d83dd74f9420bcb1, type: 3}
+  currentSpin: 0
+  expectedReturnModifier: 1
 --- !u!1 &483256482
 GameObject:
   m_ObjectHideFlags: 0
@@ -43296,7 +43312,7 @@ GameObject:
   - component: {fileID: 868601263}
   - component: {fileID: 868601262}
   m_Layer: 0
-  m_Name: Llama_Right
+  m_Name: LlamaRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
