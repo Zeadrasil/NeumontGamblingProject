@@ -35,6 +35,7 @@ public class AudioManager : Singleton<AudioManager>
 		onAudioChange?.Subscribe(OnAudioChange);
 
 		onPlayAudioCueEvent.OnAudioCuePlay += OnPlayAudioCue;
+		onPlayAudioClipEvent.OnAudioClipPlay += OnPlayAudioClip;
 		//onPlayAudioClipEvent?.Subscribe(OnPlayAudioClip);
 		//onPlay3DAudioClipEvent?.Subscribe(OnPlayAudio3DClip);
 
@@ -69,10 +70,12 @@ public class AudioManager : Singleton<AudioManager>
 		return true;		
 	}
 
-	public void OnPlayAudioClip(AudioClip audioClip)
+	public bool OnPlayAudioClip(AudioClip audioClip)
 	{
 		AudioEmitter audioEmitter = GetAudioEmitter();
 		audioEmitter.PlayAudioClip(audioClip, audioConfigurationData, false);
+
+		return true;
 	}
 
 	public void OnPlayAudio3DClip(AudioClip audioClip)
