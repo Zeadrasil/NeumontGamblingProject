@@ -15,7 +15,7 @@ public class SlotMachine : MonoBehaviour
     [SerializeField] private TMP_Text winningsDisplay;
     [SerializeField] private Canvas startMenu;
     [SerializeField] private GameObject jackpotEffect;
-    [SerializeField] private Canvas HUD;
+    [SerializeField] private TMP_Text creditsDisplay;
     private float reward;
 
     // Update is called once per frame
@@ -46,11 +46,11 @@ public class SlotMachine : MonoBehaviour
                 {
                     state = 2;
                     reward = CalculateRewards(new int[] { wheels[0].Result, wheels[1].Result, wheels[2].Result });
-                    if(reward == 1000)
+                    if(reward * expectedReturnModifier >= 40)
                     {
                         Destroy(Instantiate(jackpotEffect), 5);
                     }
-                    spinTimeLeft = 1.5f;
+                    spinTimeLeft = 0.5f;
                 }
             }
             else if(state == 2)
@@ -58,10 +58,17 @@ public class SlotMachine : MonoBehaviour
                 winningsDisplay.text = (reward * int.Parse(betDisplay.text) *
                     (currentSpin == 19 ? 2 * expectedReturnModifier : expectedReturnModifier)).ToString();
                 state = 3;
+                spinTimeLeft = 2.0f;
+            }
+            else if (state == 3)
+            {
+                creditsDisplay.text = (int.Parse(creditsDisplay.text) + int.Parse(winningsDisplay.text)).ToString();
+                winningsDisplay.text = "00";
+                state = 4;
             }
             else if(state == -1)
             {
-                state = 3;
+                state = 4;
                 wheels[0].spinning = false;
                 wheels[1].spinning = false;
                 wheels[2].spinning = false;
@@ -74,7 +81,7 @@ public class SlotMachine : MonoBehaviour
 
     public void InitiateSpin()
     {
-        if (state == 3)
+        if (state == 4)
         {
             wheels[0].spinning = true;
             wheels[1].spinning = true;
@@ -239,14 +246,13 @@ public class SlotMachine : MonoBehaviour
     {
         expectedReturnModifier = expectedReturn;
         betDisplay.text = (expectedReturnModifier == 0.5f || expectedReturnModifier == 1.5f) ? "10" : "5";
-        winningsDisplay.text = string.Empty;
+        winningsDisplay.text = "00";
         startMenu.enabled = false;
-        HUD.enabled = true;
     }
 
     public void IncreaseBet()
     {
-        if (state == 3)
+        if (state == 4)
         {
             betDisplay.text = (int.Parse(betDisplay.text) + ((expectedReturnModifier == 0.5f ||
                 expectedReturnModifier == 1.5f) ? 10 : 5)).ToString();
@@ -254,7 +260,7 @@ public class SlotMachine : MonoBehaviour
     }
     public void DecreaseBet()
     {
-        if (state == 3)
+        if (state == 4)
         {
             int val = (expectedReturnModifier == 0.5f || expectedReturnModifier == 1.5f) ? 10 : 5;
             int newBet = int.Parse(betDisplay.text) - val;
@@ -264,5 +270,10 @@ public class SlotMachine : MonoBehaviour
             }
             betDisplay.text = newBet.ToString();
         }
+    }
+
+    public void ClearWinnings()
+    {
+        creditsDisplay.text = "00";
     }
 }
