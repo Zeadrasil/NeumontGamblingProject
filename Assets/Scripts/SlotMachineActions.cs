@@ -15,6 +15,7 @@ public class SlotMachineActions : MonoBehaviour
 	[SerializeField] private EventChannel onSpinStart;
 	[SerializeField] private IntEventChannel onSpinResult;
 	[SerializeField] private EventChannel onSpinResultDone;
+	[SerializeField] private IntEventChannel onUpdateBet;
 
 	[Header("Audio")]
 	[SerializeField] private AudioClipEvent onAudioEvent;
@@ -30,6 +31,7 @@ public class SlotMachineActions : MonoBehaviour
 	float nextPlayMusicTime = 0;
 	AudioClip musicAudioClip = null;
 	bool playingGame = false;
+	private int currentBet = 0;
 
 	void Start()
 	{
@@ -37,6 +39,7 @@ public class SlotMachineActions : MonoBehaviour
 		onStopGame.Subscribe(OnStopGame);
 		onSpinStart.Subscribe(OnSpinStart);
 		onSpinResult.Subscribe(OnSpinResults);
+		onUpdateBet.Subscribe(OnUpdateBet);
 
 		nextPlayMusicTime = Time.time + Random.Range(minAttractMusicTime, minAttractMusicTime * 1.5f);
 	}
@@ -114,14 +117,21 @@ public class SlotMachineActions : MonoBehaviour
 		StartCoroutine(WinSequence(result));
 	}
 
+
+	void OnUpdateBet(int newBet)
+	{
+		currentBet = newBet;
+	}
+
 	IEnumerator WinSequence(int result)
 	{
 		float waitTime = 1;
-		if (result >= 1 && result < 10)
+		int relativeResult = result / currentBet;
+		if (relativeResult >= 1 && relativeResult < 10)
 		{
 			onAudioEvent.OnPlayEvent(winLowAudioClip);
 		}
-		if (result >= 10 && result < 30)
+		if (relativeResult >= 10 && relativeResult < 30)
 		{
 			winText.text = "BIG WIN!";
 			winAnimator.SetTrigger("Start");
@@ -135,7 +145,7 @@ public class SlotMachineActions : MonoBehaviour
 			onAudioEvent.OnPlayEvent(winMediumAudioClip);
 			waitTime += 2;
 		}
-		if (result >= 30)
+		if (relativeResult >= 30)
 		{
 			winText.text = "MASSIVE WIN!";
 			winAnimator.SetTrigger("Start");
@@ -153,7 +163,7 @@ public class SlotMachineActions : MonoBehaviour
 		
 		yield return new WaitForSeconds(waitTime);
 
-		if (result >= 10)	winAnimator.SetTrigger("Done");
+		if (relativeResult >= 10)	winAnimator.SetTrigger("Done");
 		onSpinResultDone.RaiseEvent();
 	}
 

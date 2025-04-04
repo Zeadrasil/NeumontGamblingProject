@@ -20,6 +20,7 @@ public class SlotMachine : MonoBehaviour
 	[SerializeField] private EventChannel onSpinStart;
 	[SerializeField] private IntEventChannel onSpinResult;
 	[SerializeField] private EventChannel onSpinResultDone;
+	[SerializeField] private IntEventChannel onUpdateBet;
 
 	[Header("Audio")]
 	[SerializeField] private AudioClipEvent onAudioEvent;
@@ -30,7 +31,7 @@ public class SlotMachine : MonoBehaviour
 	[SerializeField] private AudioClip startSpinAudioClip;
 	[SerializeField] private AudioClip stopSpinAudioClip;
 		
-	private int state = -1;
+	private int state = -2;
 	private float spinTimeLeft = 0.5f;
 	private int currentWheel = 0;
 	public float currentSpin = 0;
@@ -44,16 +45,9 @@ public class SlotMachine : MonoBehaviour
 	private void Start()
 	{
 		onSpinResultDone.Subscribe(OnSpinResultDone);
-		OnSetReturn(expectedReturnModifier);
-
-		// initialize wheels
-		state = 4;
-		wheels[0].spinning = false;
-		wheels[1].spinning = false;
-		wheels[2].spinning = false;
-		wheels[0].fixing = true;
-		wheels[1].fixing = true;
-		wheels[2].fixing = true;
+		//This closes the screen before anything can be selected, so it is being removed
+		//OnSetReturn(expectedReturnModifier);
+		onUpdateBet.RaiseEvent(bet);
 	}
 
 	void Update()
@@ -101,12 +95,27 @@ public class SlotMachine : MonoBehaviour
 			{
 				credits += winnings;
 				winnings = 0;
-				if (bet > credits) bet = (credits / 5) * 5;
+				if (bet > credits)
+				{
+					bet = (credits / 10) * 10;
+					onUpdateBet.RaiseEvent(bet);
+				}
 				creditsDisplay.text = credits.ToString("000");
 				betDisplay.text = bet.ToString("000");
 				winningsDisplay.text = winnings.ToString("000");
 				state = 4;
 			}
+			else if (state == -2)
+			{
+                // initialize wheels
+                state = 4;
+                wheels[0].spinning = false;
+                wheels[1].spinning = false;
+                wheels[2].spinning = false;
+                wheels[0].fixing = true;
+                wheels[1].fixing = true;
+                wheels[2].fixing = true;
+            }
 		}
 	}
 
@@ -299,7 +308,7 @@ public class SlotMachine : MonoBehaviour
 			if (bet + addBet > credits) return;
 
 			bet += addBet;
-
+			onUpdateBet.RaiseEvent(bet);
 			betDisplay.text = bet.ToString("000");
 			creditsDisplay.text = credits.ToString("000");
 
@@ -314,7 +323,7 @@ public class SlotMachine : MonoBehaviour
 			if (bet <= 0) return;
 
 			bet -= subtractBet;
-
+			onUpdateBet.RaiseEvent(bet);
 			betDisplay.text = bet.ToString("000");
 			creditsDisplay.text = credits.ToString("000");
 			onAudioEvent.OnPlayEvent(betdownAudioClip);
@@ -332,7 +341,8 @@ public class SlotMachine : MonoBehaviour
 		onAudioEvent.OnPlayEvent(creditsAudioClip);
 
 		credits += credit;
-		if (credits > 100) credits = 100;
+		//Cap caused issues when pressed after receiving a reward, so removed to reduce risk of accidental clearing of winnings
+		//if (credits > 100) credits = 100;
 		creditsDisplay.text = credits.ToString("000");
 	}
 
@@ -343,6 +353,7 @@ public class SlotMachine : MonoBehaviour
 
 		credits = 0;
 		bet = 0;
+		onUpdateBet.RaiseEvent(bet);
 		creditsDisplay.text = credits.ToString("000");
 		betDisplay.text = bet.ToString("000");
 
