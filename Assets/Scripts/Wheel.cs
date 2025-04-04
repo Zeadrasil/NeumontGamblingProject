@@ -6,7 +6,7 @@ public class Wheel : MonoBehaviour
     //Each tile in the wheel, first 2 and last 2 should be the same type in order to allow all to be seen
     [SerializeField] private List<Tile> tiles;
     //Size of each tile's sprite in world units
-    [SerializeField] int size;
+    [SerializeField] float size;
     //Speed in tiles per second
     [SerializeField] private float speed;
     //Current tile that the wheel is showing
