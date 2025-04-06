@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class SlotMachine : MonoBehaviour
@@ -37,7 +35,7 @@ public class SlotMachine : MonoBehaviour
 	public float currentSpin = 0;
 	public float expectedReturnModifier = 1;
 
-	private float reward;
+	private float reward = 0;
 	private int credits = 0;
 	private int bet = 0;
 	private int winnings = 0;
@@ -52,6 +50,17 @@ public class SlotMachine : MonoBehaviour
 
 	void Update()
 	{
+		#region Controls
+		// keyboard controls
+		if (Input.GetKeyDown(KeyCode.Escape))		Application.Quit();
+		if (Input.GetKeyDown(KeyCode.Space))		OnStartSpin();
+		if (Input.GetKeyDown(KeyCode.UpArrow))		OnIncreaseBet();
+		if (Input.GetKeyDown(KeyCode.DownArrow))	OnDecreaseBet();
+		if (Input.GetKeyDown(KeyCode.Minus))		OnApplyCredits(10);
+		if (Input.GetKeyDown(KeyCode.Equals))		OnApplyCredits(100);
+		if (Input.GetKeyDown(KeyCode.Q))			OnCashOut();
+		#endregion // Controls
+
 		spinTimeLeft -= Time.deltaTime;
 		if(spinTimeLeft <= 0)
 		{
@@ -94,7 +103,7 @@ public class SlotMachine : MonoBehaviour
 			else if (state == 3)
 			{
 				credits += winnings;
-				winnings = 0;
+
 				if (bet > credits)
 				{
 					bet = (credits / 10) * 10;
@@ -296,11 +305,15 @@ public class SlotMachine : MonoBehaviour
 
 			credits -= bet;
 			creditsDisplay.text = credits.ToString("000");
+
+			winnings = 0;
+			winningsDisplay.text = winnings.ToString("000");
+
 			onSpinStart.RaiseEvent();
 		}
 	}
 
-	public void IncreaseBet()
+	public void OnIncreaseBet()
 	{
 		if (state == 4)
 		{
@@ -315,7 +328,7 @@ public class SlotMachine : MonoBehaviour
 			onAudioEvent.OnPlayEvent(betupAudioClip);
 		}
 	}
-	public void DecreaseBet()
+	public void OnDecreaseBet()
 	{
 		if (state == 4)
 		{
@@ -326,12 +339,15 @@ public class SlotMachine : MonoBehaviour
 			onUpdateBet.RaiseEvent(bet);
 			betDisplay.text = bet.ToString("000");
 			creditsDisplay.text = credits.ToString("000");
+
 			onAudioEvent.OnPlayEvent(betdownAudioClip);
 		}
 	}
 
 	public void OnApplyCredits(int credit)
 	{
+		if (state != 4 || (credits + credit) > 999) return;
+
 		// check if we are starting the game
 		if (credits == 0)
 		{
@@ -348,7 +364,10 @@ public class SlotMachine : MonoBehaviour
 
 	public void OnCashOut()
 	{
-		onStopGame.RaiseEvent();
+		if (state != 4) return;
+		
+
+			onStopGame.RaiseEvent();
 		if (credits > 0) onAudioEvent.OnPlayEvent(cashoutAudioClip);
 
 		credits = 0;

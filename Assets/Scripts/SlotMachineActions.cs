@@ -138,7 +138,7 @@ public class SlotMachineActions : MonoBehaviour
 		{
 			onAudioEvent.OnPlayEvent(winLowAudioClip);
 		}
-		if (relativeResult >= 2.0f && relativeResult < 5.0f)
+		if (relativeResult >= 2.0f && relativeResult < 4.0f)
 		{
 			winText.text = "BIG WIN!";
 			winAnimator.SetTrigger("Start");
@@ -152,7 +152,7 @@ public class SlotMachineActions : MonoBehaviour
 			onAudioEvent.OnPlayEvent(winMediumAudioClip);
 			waitTime += 2;
 		}
-		if (relativeResult >= 5.0f)
+		if (relativeResult >= 4.0f)
 		{
 			winText.text = "MASSIVE WIN!";
 			winAnimator.SetTrigger("Start");
